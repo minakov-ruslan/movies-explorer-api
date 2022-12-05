@@ -11,7 +11,7 @@ module.exports.createMovieValidation = celebrate({
     image: Joi.string().required().regex(URL),
     trailerLink: Joi.string().required().regex(URL),
     thumbnail: Joi.string().required().regex(URL),
-    movieId: Joi.string().required(),
+    movieId: Joi.number().required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
   }),
@@ -37,7 +37,7 @@ module.exports.getUnloggedUserValidation = celebrate({
 });
 module.exports.getLoggedUserValidation = celebrate({
   body: Joi.object().keys({
-    email: Joi.string().email(),
-    name: Joi.string().min(2).max(30),
+    email: Joi.string().email().required(),
+    name: Joi.string().min(2).max(30).required(),
   }),
 });

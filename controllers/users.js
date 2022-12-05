@@ -16,9 +16,6 @@ module.exports.getCurrentUser = (req, res, next) => {
       if (err.name === 'DocumentNotFoundError') {
         return next(new NotFoundError('Запрашиваемый пользователь не найден'));
       }
-      if (err.name === 'CastError') {
-        return next(new BadRequestError('Неверный запрос. Запрашиваемый пользователь не найден'));
-      }
       return next(err);
     });
 };
@@ -27,8 +24,8 @@ module.exports.updateUserInfo = (req, res, next) => {
   User.findByIdAndUpdate(req.user._id, { name, email }, { new: true, runValidators: true })
     .then((user) => res.send(user))
     .catch((err) => {
-      if (err.name === 'CastError') {
-        return next(new NotFoundError('Запрашиваемый пользователь не найден'));
+      if (err.code === 11000) {
+        return next(new ConflictError('Пользователь с даным email уже зарегистрирован'));
       }
       if (err.name === 'ValidationError') {
         return next(new BadRequestError('Ошибка валидации'));
